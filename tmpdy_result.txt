@@ -1,0 +1,5 @@
+### aweme/v1/play item_id redirect
+hop0 status=200 loc=
+
+### iesdouyin playwm item_id
+hop0 status=404 loc=

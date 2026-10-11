@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>VDCat 扩展设置</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <main class="wrap">
+    <h1>VDCat 视频下载助手 · 设置</h1>
+    <p class="desc">
+      扩展通过自托管 VDCat 服务的外部接口（<code>/api/external/*</code>）工作，
+      请在 Web 端「API 接入」页面创建 API Key（形如 <code>vk_xxxx</code>）后填入下方。
+    </p>
+
+    <form id="form">
+      <label class="field">
+        <span>服务地址</span>
+        <input id="base-url" type="text" placeholder="http://127.0.0.1:8626" autocomplete="off" />
+        <small>不带末尾斜杠；远程部署时填写 https 域名。</small>
+      </label>
+
+      <label class="field">
+        <span>API Key</span>
+        <input id="api-key" type="password" placeholder="vk_xxxxxxxx..." autocomplete="off" />
+        <small>仅保存在浏览器扩展存储（chrome.storage.sync），不会发送给第三方。</small>
+      </label>
+
+      <div class="actions">
+        <button type="submit" class="btn primary">保存</button>
+        <button type="button" id="btn-test" class="btn">测试连接</button>
+      </div>
+      <div id="msg" class="msg"></div>
+    </form>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>

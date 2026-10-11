@@ -1,0 +1,32 @@
+# Go
+/vdcat
+/vdcat.exe
+/dist/
+
+# 运行数据（SQLite/WAL/下载）
+/data/
+/downloads/
+/.devdata/
+*.db
+*.db-wal
+*.db-shm
+*.part
+
+# 前端
+/frontend/node_modules/
+/frontend/dist/
+
+# 本地环境配置（含密码，勿提交）
+/deploy/vdcat.env
+/.env
+/.env.local
+
+# 构建产物目录（go:embed 需要保留 web 目录，但忽略内容）
+/internal/server/web/*
+!/internal/server/web/.gitkeep
+
+# OS/IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>VDCat 视频下载助手</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <img src="../icons/icon-256.png" alt="" class="brand-icon" />
+      <span class="brand-name">VDCat</span>
+    </div>
+    <button id="btn-options" class="icon-btn" title="设置">⚙</button>
+  </header>
+
+  <!-- 使用前提提示 -->
+  <section class="prereq">
+    <div class="prereq-title">使用前提</div>
+    <ul class="prereq-list">
+      <li><b>链接解析</b>：依赖后端服务，请先在
+        <a href="#" id="link-options-prereq">设置</a> 中配置服务地址与 API Key。</li>
+      <li><b>主页 / 批量本地下载</b>：基于当前页面解析，需先在浏览器中
+        登录对应平台<b>（此功能当前仅支持快手）</b>，否则无法正常抓取。</li>
+    </ul>
+  </section>
+
+  <!-- 未配置提示 -->
+  <section id="setup-tip" class="setup-tip hidden">
+    <p>尚未配置服务地址或 API Key。</p>
+    <button id="btn-go-options" class="btn primary block">打开设置</button>
+  </section>
+
+  <main id="panel">
+    <!-- 输入区 -->
+    <section class="card">
+      <div class="row between center">
+        <label class="field-label">视频链接 / 分享文本</label>
+        <div class="mini-actions">
+          <button id="btn-paste" class="btn ghost sm" title="读取剪贴板">粘贴</button>
+          <button id="btn-tab" class="btn ghost sm" title="读取当前标签页地址">当前页</button>
+          <button id="btn-clear" class="btn ghost sm" title="清空">清空</button>
+        </div>
+      </div>
+      <textarea id="input-url" rows="3" placeholder="粘贴抖音/快手链接或整段分享文案，自动提取 https 链接"></textarea>
+      <div class="row between center mt8">
+        <select id="sel-platform" class="select">
+          <option value="auto">自动识别</option>
+          <option value="douyin">抖音</option>
+          <option value="kuaishou">快手</option>
+        </select>
+        <label class="check"><input type="checkbox" id="chk-cover" /> 同时下载封面</label>
+      </div>
+      <div class="row between center mt8">
+        <span class="field-label">下载方式</span>
+        <div class="seg" id="seg-dest">
+          <label class="seg-opt"><input type="radio" name="dest" value="server" checked /><span>后端队列</span></label>
+          <label class="seg-opt"><input type="radio" name="dest" value="local" /><span>本地下载</span></label>
+        </div>
+      </div>
+      <label class="check home-mode-row">
+        <input type="checkbox" id="chk-home-mode" />
+        <span>视频卡片注入下载按钮</span>
+      </label>
+      <div class="row gap8 mt8">
+        <button id="btn-parse" class="btn primary flex1">解析</button>
+        <button id="btn-quick-download" class="btn flex1" title="解析成功后直接入队">解析并下载</button>
+      </div>
+      <!-- 识别到快手作者主页时显示：整页批量下载（主页模式） -->
+      <div class="row gap8 mt8">
+        <button id="btn-batch-page" class="btn primary flex1 hidden">下载本页面全部视频</button>
+      </div>
+      <p id="batch-hint" class="batch-hint hidden">当前为作者主页，已切换为整页下载模式：点击按钮后将自动逐条播放并下载，请勿关闭该标签页。</p>
+    </section>
+
+    <!-- 解析结果 -->
+    <section id="result-card" class="card hidden">
+      <div class="result-head">
+        <span id="result-platform" class="tag">平台</span>
+        <span id="result-cookie" class="tag subtle"></span>
+      </div>
+      <div class="preview-row">
+        <video id="video-preview" controls preload="none" playsinline></video>
+        <img id="cover-preview" alt="封面" class="hidden" />
+      </div>
+      <div class="meta">
+        <div id="result-title" class="title-line">—</div>
+        <div class="muted">
+          <span id="result-author"></span>
+          <span id="result-duration" class="ml8"></span>
+        </div>
+        <a id="result-page" class="page-link muted" target="_blank" rel="noreferrer"></a>
+      </div>
+      <div class="row gap8 mt8">
+        <button id="btn-download" class="btn success flex1">加入下载队列</button>
+        <button id="btn-copy-video" class="btn ghost" title="复制无水印直链">复制直链</button>
+      </div>
+    </section>
+
+    <!-- 活动任务 -->
+    <section class="card">
+      <div class="row between center">
+        <span class="field-label">下载任务</span>
+        <button id="btn-refresh-tasks" class="btn ghost sm">刷新</button>
+      </div>
+      <ul id="task-list" class="task-list">
+        <li class="empty muted">暂无活动任务</li>
+      </ul>
+    </section>
+  </main>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

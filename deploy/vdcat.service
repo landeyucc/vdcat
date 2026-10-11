@@ -1,0 +1,25 @@
+[Unit]
+Description=vdcat short video downloader
+After=network.target
+
+[Service]
+Type=simple
+User=vdcat
+Group=vdcat
+WorkingDirectory=/opt/vdcat
+EnvironmentFile=/opt/vdcat/vdcat.env
+ExecStart=/opt/vdcat/vdcat
+Restart=always
+RestartSec=3
+
+# 安全加固
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/vdcat
+# 如启用联网浏览器自动打开可去掉；服务器无需
+# 限制资源可按需调整
+
+[Install]
+WantedBy=multi-user.target

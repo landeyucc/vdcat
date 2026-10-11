@@ -1,0 +1,227 @@
+/* VDCat 主页模式（快手作者页） */
+
+/* 仅在主页模式开启且处于作者页时，卡片承载绝对定位的下载按钮 */
+body.vdcat-home-on .photo-card.vdcat-card {
+  position: relative;
+}
+
+.vdcat-dl-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 20;
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: rgba(37, 99, 235, 0.92);
+  border-radius: 999px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
+  transition: background 0.15s, transform 0.15s;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+}
+.vdcat-dl-btn:hover {
+  background: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+/* 处理中：按钮变为 loading 圆点 */
+.vdcat-dl-btn.vdcat-loading {
+  width: 26px;
+  padding: 5px 0;
+  background: rgba(37, 99, 235, 0.75);
+  pointer-events: none;
+}
+.vdcat-dl-btn.vdcat-loading::after {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: vdcat-spin 0.7s linear infinite;
+}
+@keyframes vdcat-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 嗅探期间：视频弹层整块隐藏，网络照常加载，页面不闪烁、不阻塞 */
+body.vdcat-sniffing .player-pop,
+body.vdcat-sniffing .player-pop * {
+  visibility: hidden !important;
+}
+body.vdcat-sniffing .player-pop {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* 页面提示 toast */
+.vdcat-toast {
+  position: fixed;
+  right: 20px;
+  bottom: 24px;
+  z-index: 999999;
+  max-width: 360px;
+  padding: 10px 16px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: #fff;
+  background: #0f172a;
+  border-radius: 8px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.28);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  transition: opacity 0.25s;
+}
+.vdcat-toast.vdcat-hide {
+  opacity: 0;
+}
+.vdcat-toast.vdcat-success {
+  background: #16a34a;
+}
+.vdcat-toast.vdcat-error {
+  background: #dc2626;
+}
+.vdcat-toast.vdcat-warn {
+  background: #d97706;
+}
+
+/* 整页批量下载：工作中全屏锁定并模糊页面；暂停后清晰、可点击 */
+.vdcat-batch-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483645;
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  pointer-events: auto; /* 工作中拦截页面真人点击（不影响程序化 dispatchEvent） */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+}
+/* 暂停/失败：遮罩透明、不拦截，页面恢复清晰与可操作；面板仍可见 */
+.vdcat-batch-mask.vdcat-mask-paused {
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  pointer-events: none;
+}
+
+.vdcat-batch-panel {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 2147483646;
+  width: 300px;
+  max-width: calc(100vw - 24px);
+  padding: 14px 16px 14px;
+  border-radius: 12px;
+  background: rgba(17, 24, 39, 0.96);
+  color: #f8fafc;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Microsoft YaHei", sans-serif;
+  user-select: none;
+  /* 面板自身始终可交互（暂停时父层不拦截，需单独恢复） */
+  pointer-events: auto;
+}
+/* 暂停/失败态用琥珀色边框提示 */
+.vdcat-batch-panel.vdcat-batch-is-paused {
+  border-color: rgba(245, 158, 11, 0.7);
+}
+.vdcat-batch-drag {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: move;
+  padding-bottom: 8px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.vdcat-batch-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.vdcat-batch-grip {
+  font-size: 14px;
+  color: #94a3b8;
+  cursor: move;
+  line-height: 1;
+}
+.vdcat-batch-stat {
+  font-size: 13px;
+  color: #cbd5e1;
+}
+.vdcat-batch-stat b {
+  color: #60a5fa;
+  font-size: 16px;
+  margin: 0 2px;
+}
+.vdcat-batch-status {
+  margin-top: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #93c5fd;
+  word-break: break-all;
+  min-height: 18px;
+}
+.vdcat-batch-tip {
+  margin-top: 8px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #94a3b8;
+}
+.vdcat-batch-spinner {
+  margin: 10px auto 0;
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #60a5fa;
+  border-radius: 50%;
+  animation: vdcat-spin 0.8s linear infinite;
+}
+.vdcat-batch-spinner.hidden {
+  display: none;
+}
+.vdcat-batch-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+.vdcat-batch-btn {
+  flex: 1;
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px 0;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 999px;
+  color: #fff;
+  transition: filter 0.15s, transform 0.15s;
+}
+.vdcat-batch-btn:hover {
+  filter: brightness(1.12);
+  transform: translateY(-1px);
+}
+.vdcat-batch-toggle {
+  background: #2563eb;
+}
+.vdcat-batch-is-paused .vdcat-batch-toggle {
+  background: #d97706;
+}
+.vdcat-batch-end {
+  background: #374151;
+}
+.vdcat-batch-btn.hidden {
+  display: none !important;
+}
