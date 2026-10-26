@@ -555,7 +555,6 @@ func (m *Manager) Delete(id string, removeFile bool) error {
 		_ = os.Remove(path)
 		_ = os.Remove(path + ".part")
 		_ = os.Remove(strings.TrimSuffix(path, filepath.Ext(path)) + ".json")
-		// 任务文件夹已空则一并移除（封面等其他文件仍在时 Remove 会失败，自动保留）
 		_ = os.Remove(filepath.Dir(path))
 	}
 	m.mu.Lock()
@@ -583,12 +582,10 @@ func (m *Manager) setStatus(t *Task, s Status, errMsg string) {
 }
 
 // Recover 启动时把上次未完成任务标记为 interrupted；
-// autoRetry=true 时将它们重新排队下载（小文件直接重下）。
 func (m *Manager) Recover(autoRetry bool) {
 	if m.store == nil {
 		return
 	}
-	// 先取出未完成记录，再统一标记
 	pending, err := m.store.RecoverableTasks()
 	if err != nil {
 		return

@@ -11,7 +11,7 @@ import (
 	"vdcat/internal/store"
 )
 
-// Config 运行期配置。敏感登录凭据只来自环境变量，绝不入库/回传前端。
+// Config 运行期配置。
 type Config struct {
 	Cookie      string `json:"cookie"`
 	DownloadDir string `json:"download_dir"`
@@ -22,7 +22,6 @@ type Config struct {
 	ForceParse bool   `json:"force_parse"` // 强制使用所选方式，失败不切换兜底
 	WriteMeta  bool   `json:"write_meta"`
 
-	// 仅来自环境变量，不通过 API 修改
 	Addr        string `json:"-"`
 	DBPath      string `json:"-"`
 	AdminUser   string `json:"-"`

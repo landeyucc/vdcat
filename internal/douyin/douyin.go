@@ -174,7 +174,7 @@ func (c *Client) fetchDetail(id string) (*platform.Info, error) {
 		AwemeList  []struct {
 			AwemeID  string `json:"aweme_id"`
 			Desc     string `json:"desc"`
-			Duration int    `json:"duration"` // 毫秒
+			Duration int    `json:"duration"` 
 			Video    struct {
 				PlayAddr struct {
 					Width   int      `json:"width"`
